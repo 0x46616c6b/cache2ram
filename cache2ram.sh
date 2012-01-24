@@ -19,8 +19,9 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-dirs="Google com.apple.iTunes com.apple.Safari Firefox"
+dirs="Google com.apple.iTunes com.apple.Safari Firefox Chromium"
 size=1024 # size in mb
+origin="${HOME}/Library/Caches"
 ramdisk="/Volumes/ramdisk"
 
 diskutil erasevolume HFS+ "ramdisk" `hdiutil attach -nomount ram://$[size*2048]`
@@ -30,11 +31,17 @@ if [ -d ${ramdisk} ]; then
 	do
 		mkdir ${ramdisk}/${dir}
 		if [ -d ${origin}/${dir} ]; then
-			mv ${origin}/${dir} ${origin}/${dir}.bak
+			if [ ! -L ${origin}/${dir} ]; then
+				mv ${origin}/${dir} ${origin}/${dir}.bak
+			fi
 		fi
+		
+		if [ -L ${origin}/${dir} ]; then
+			rm ${origin}/${dir}
+		fi 
 	
 		if [ ! -L ${origin}/${dir} ]; then
-		ln -s ${ramdisk}/${dir} ${origin}/${dir}
+			ln -s ${ramdisk}/${dir} ${origin}/${dir}
 		fi
 	done
 fi
