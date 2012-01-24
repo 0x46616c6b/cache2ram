@@ -21,8 +21,6 @@
 
 dirs="Google com.apple.iTunes com.apple.Safari Firefox"
 size=1024 # size in mb
-user=$(/usr/bin/logname)
-origin="/Users/${user}/Library/Caches"
 ramdisk="/Volumes/ramdisk"
 
 diskutil erasevolume HFS+ "ramdisk" `hdiutil attach -nomount ram://$[size*2048]`
